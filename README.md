@@ -1,5 +1,17 @@
 # Hydra Node Client
-Hydra client is a js file that should be included in the web page or node project. It provides two functions:
+Hydra client is a js file that should be included in the web page or node project. 
+
+In a NodeJS project inside package.json:
+
+```
+"hydra-node" : "https://github.com/innotech/hydra_node_client.git",
+```
+In a website: 
+```
+<script type="text/javascript" src="http://innotech.github.io/hydra/client/hydra.js"></script>
+```
+
+It provides two functions:
 
 ## hydra.config([<server list>], options)
 * [<server list>] - the initial server urls we want to use to access Hydra.
