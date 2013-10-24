@@ -1,10 +1,25 @@
-var hydra = require('../lib/hydra-node');
+/*jslint node: true */
+/*globals describe,beforeEach,it*/
+'use strict';
+var assert = require("assert");
+var SandboxedModule = require('sandboxed-module');
 
-hydra.config(['http://localhost:7001']);
+function createClient(httpget) {
+    return SandboxedModule.require('../lib/hydra-node', {
+        requires: {'request': {get: httpget}}
+    });
+}
 
-setInterval(function(){
-	hydra.get('hydra', false, function(err, data){
-		console.log('>>>> Error', err);
-		console.log('>>>> Data', data);
-	});
-}, 2000);
+describe('hydra-node', function () {
+    var hydra;
+    describe('config', function() {
+        it('should try to get an updated hydralist', function () {
+            var calledUrl,
+                httpget = function (url) {calledUrl = url; };
+            hydra = createClient(httpget);
+
+            hydra.config(['https://hydraserver']);
+            assert.equal(calledUrl, 'https://hydraserver/app/hydra');
+        });
+    });
+});
