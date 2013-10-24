@@ -1,19 +1,24 @@
 {
-	"name"		: "hydra-node"
-,	"version"	: "0.1.11"
-,	"author"		: "Alejandro Penedo <icedfiend@gmail.com>"
-,	"contributors"	: [
-		"Luis Mesas <luismesas@gmail.com>",
-		"Jonas Da Cruz <unlogic@gmail.com>"
-	]
-,	"repository"	: {"type": "git", "url": "git://github.com/thegameofcode/hero.git"}
-,	"main"			: "index.js"
-,	"dependencies"	: {
-		"request"	: "x"
-	}
-,
-	"engines" : {
-		"node"	: "0.10.x"
-	,	"npm"	: "1.2.x"
-	}
+  "name": "hydra-node",
+  "version": "0.1.11",
+  "author": "Alejandro Penedo <icedfiend@gmail.com>",
+  "contributors": [
+    "Luis Mesas <luismesas@gmail.com>",
+    "Jonas Da Cruz <unlogic@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/innotech/hydra_javascript_client.git"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "request": "~2.27.0"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  },
+  "devDependencies": {
+    "sandboxed-module": "~0.3.0"
+  }
 }
