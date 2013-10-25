@@ -2,8 +2,9 @@
 /*globals describe,beforeEach,it*/
 'use strict';
 var assert = require('chai').assert,
-    expect = require('chai').expect
-var SandboxedModule = require('sandboxed-module');
+    expect = require('chai').expect,
+    SandboxedModule = require('sandboxed-module'),
+    empty = function() {};
 
 
 var flushTimeout, flushInterval;
@@ -15,12 +16,15 @@ function createFlusher(f) {
 }
 
 function createClient(httpget, timers) {
-    var requires = {'request': {get: httpget}},
+    var default_httpget = empty,
         default_timers = {
             setTimeout: function(f) {flushTimeout = createFlusher(f); return 1; },
             setInterval: function(f) {flushInterval = createFlusher(f); return 1; }
+        },
+        requires = {
+            'request': {get: httpget || default_httpget},
+            './timers': timers || default_timers
         };
-    requires["./timers"] = timers || default_timers;
     return SandboxedModule.require('../lib/hydra-node', {
         requires:  requires
     });
@@ -98,21 +102,19 @@ describe('hydra-node', function () {
         });
 
         it('should not mantain a reference to array list parameter to prevent external changes', function () {
-            var servers = ['https://hydraserver1', 'https://hydraserver2', 'https://hydraserver3'],
-                httpget = function () {};
-            hydra = createClient(httpget);
+            var servers = ['https://hydraserver1', 'https://hydraserver2', 'https://hydraserver3'];
+            hydra = createClient();
             hydra.config(servers);
             servers[0] = 'xx';
             assert.notDeepEqual(hydra.config().servers, servers);
         });
 
-        it('should throw an exception if no hydra servers are informed', function (){
+        it('should throw an exception if no hydra servers are informed', function () {
             var exceptionmessage = 'Empty hydra server list',
-                servers = [],
-                httpget = function () {};
-            hydra = createClient(httpget);
-            expect(function (){hydra.config(null,{})}).to.throw(exceptionmessage);
-            expect(function (){hydra.config(servers)}).to.throw(exceptionmessage);
-        })
+                servers = [];
+            hydra = createClient();
+            expect(function() {hydra.config(null, {}); }).to.throw(exceptionmessage);
+            expect(function() {hydra.config(servers); }).to.throw(exceptionmessage);
+        });
     });
 });
