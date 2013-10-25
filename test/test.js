@@ -95,5 +95,14 @@ describe('hydra-node', function () {
             flushTimeout();
             assert.deepEqual(hydra.config().servers, responseServers);
         });
+
+        it('should not mantain a reference to array list parameter to prevent external changes', function () {
+            var servers = ['https://hydraserver1', 'https://hydraserver2', 'https://hydraserver3'],
+                httpget = function () {};
+            hydra = createClient(httpget);
+            hydra.config(servers);
+            servers[0] = 'xx';
+            assert.notDeepEqual(hydra.config().servers, servers);
+        });
     });
 });
