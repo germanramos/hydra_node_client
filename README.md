@@ -22,6 +22,7 @@ It provides two functions:
 
 By default on the browser, the initial Hydra server will be the host serving the hydra.js client file, making this function call optional, although it’s recommended to set up the servers.
 The node client have no initial servers, throwing an exception if <code>hydra.config</code> is not call prior to <code>hydra.get</code> 
+Calling <code>hydra.config</code> without parameters will return the current hydra servers list.
 
 ## hydra.get(appID, nocache, callback)
 This function will call to callback(error, [servers]) function with the url of the server that provides the given appID.

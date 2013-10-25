@@ -76,5 +76,24 @@ describe('hydra-node', function () {
                 assert.equal(calledUrl, servers[i % servers.length] + '/app/hydra');
             });
         });
+
+        it('should return the config', function () {
+            var startingServers = ['https://hydraserver1', 'https://hydraserver2', 'https://hydraserver3'],
+                responseServers = ['https://hydraserver2', 'https://hydraserver3', 'https://hydraserver4'],
+                calledUrls = [],
+                getcalls = 0,
+                httpget = function (url, cb) {
+                    calledUrls.push(url);
+                    getcalls += 1;
+                    cb(getcalls !== 2, {statusCode: 200}, JSON.stringify(responseServers));
+                };
+            hydra = createClient(httpget);
+            flushTimeout();
+            hydra.config(startingServers.slice());
+            startingServers.push(startingServers.shift());
+            assert.deepEqual(hydra.config().servers, startingServers);
+            flushTimeout();
+            assert.deepEqual(hydra.config().servers, responseServers);
+        });
     });
 });
