@@ -116,5 +116,39 @@ describe('hydra-node', function () {
             expect(function() {hydra.config(null, {}); }).to.throw(exceptionmessage);
             expect(function() {hydra.config(servers); }).to.throw(exceptionmessage);
         });
+
+        it('should set default options for timeouts', function () {
+            var options;
+            hydra = createClient();
+            hydra.config(['server1']);
+            options = hydra.config().options;
+            expect(options.hydraTimeOut).to.equal(60000);
+            expect(options.appTimeOut).to.equal(20000);
+            expect(options.retryOnFail).to.equal(500);
+        });
+
+        it('should use default options as minimum values for timeouts', function () {
+            var options;
+            hydra = createClient();
+            hydra.config(['server1'], {
+                hydraTimeOut: 1,
+                appTimeOut: 1,
+                retryOnFail: 1
+            });
+            options = hydra.config().options;
+            expect(options.hydraTimeOut).to.equal(60000);
+            expect(options.appTimeOut).to.equal(20000);
+            expect(options.retryOnFail).to.equal(500);
+            hydra.config(['server1'], {
+                hydraTimeOut: 100000,
+                appTimeOut: 200000,
+                retryOnFail: 300000
+            });
+            options = hydra.config().options;
+            expect(options.hydraTimeOut).to.equal(100000);
+            expect(options.appTimeOut).to.equal(200000);
+            expect(options.retryOnFail).to.equal(300000);
+        });
+
     });
 });
