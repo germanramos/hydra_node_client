@@ -1,7 +1,8 @@
 /*jslint node: true */
 /*globals describe,beforeEach,it*/
 'use strict';
-var assert = require('chai').assert;
+var assert = require('chai').assert,
+    expect = require('chai').expect
 var SandboxedModule = require('sandboxed-module');
 
 
@@ -104,5 +105,14 @@ describe('hydra-node', function () {
             servers[0] = 'xx';
             assert.notDeepEqual(hydra.config().servers, servers);
         });
+
+        it('should throw an exception if no hydra servers are informed', function (){
+            var exceptionmessage = 'Empty hydra server list',
+                servers = [],
+                httpget = function () {};
+            hydra = createClient(httpget);
+            expect(function (){hydra.config(null,{})}).to.throw(exceptionmessage);
+            expect(function (){hydra.config(servers)}).to.throw(exceptionmessage);
+        })
     });
 });
