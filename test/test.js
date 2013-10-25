@@ -1,7 +1,7 @@
 /*jslint node: true */
 /*globals describe,beforeEach,it*/
 'use strict';
-var assert = require("assert");
+var assert = require('chai').assert;
 var SandboxedModule = require('sandboxed-module');
 
 

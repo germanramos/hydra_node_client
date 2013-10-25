@@ -19,6 +19,7 @@
     "npm": "1.2.x"
   },
   "devDependencies": {
-    "sandboxed-module": "~0.3.0"
+    "sandboxed-module": "~0.3.0",
+    "chai": "~1.8.1"
   }
 }
