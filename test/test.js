@@ -7,7 +7,7 @@ var assert = require('chai').assert,
     empty = function() {};
 
 
-var flushTimeout, flushInterval;
+var flushTimeout, flushInterval, lastTimeout, lastInterval;
 
 function createFlusher(f) {
     return function() {
@@ -18,13 +18,23 @@ function createFlusher(f) {
 function createClient(httpget, timers) {
     var default_httpget = empty,
         default_timers = {
-            setTimeout: function(f) {flushTimeout = createFlusher(f); return 1; },
-            setInterval: function(f) {flushInterval = createFlusher(f); return 1; }
+            setTimeout: function(f, timeout) {
+                flushTimeout = createFlusher(f);
+                lastTimeout = timeout;
+                return 1;
+            },
+            setInterval: function(f, interval) {
+                flushInterval = createFlusher(f);
+                lastInterval = interval;
+                return 1;
+            }
         },
         requires = {
             'request': {get: httpget || default_httpget},
             './timers': timers || default_timers
         };
+    lastTimeout = null;
+    lastInterval = null;
     return SandboxedModule.require('../lib/hydra-node', {
         requires:  requires
     });
@@ -40,6 +50,16 @@ describe('hydra-node', function () {
 
             hydra.config(['https://hydraserver']);
             assert.equal(calledUrl, 'https://hydraserver/app/hydra');
+        });
+
+        it('should wait options.retryOnFail before retrying on fail', function () {
+            var servers = ['https://hydraserver1', 'https://hydraserver2'],
+                httpget = function (url, cb) {
+                    cb(true, {}, '{}');
+                };
+            hydra = createClient(httpget);
+            hydra.config(servers.slice());
+            expect(lastTimeout).to.equal(500);
         });
 
         it('should retry on the whole list', function () {
@@ -117,7 +137,22 @@ describe('hydra-node', function () {
             expect(function() {hydra.config(servers); }).to.throw(exceptionmessage);
         });
 
-        it('should set default timeouts options for timeouts', function () {
+        it('should should refresh hydra after refresh time', function () {
+            var servers  = [['https://hydraserver1'],
+                            ['https://hydraserver1', 'https://hydraserver2'],
+                            ['https://hydraserver1', 'https://hydraserver2', 'https://hydraserver3']],
+                getcalls = 0,
+                httpget = function (url, cb) {
+                    getcalls += 1;
+                    cb(null, {statusCode: 200}, JSON.stringify(servers[getcalls]));
+                };
+            hydra = createClient(httpget);
+            hydra.config(servers[0]);
+            flushTimeout();
+            expect(lastTimeout).to.equal(60000);
+        });
+
+        it('should set default timeouts options for timeouts (hydra refresh: 60000, app refresh: 200000, retry: 500)', function () {
             var timeouts;
             hydra = createClient();
             hydra.config(['server1']);
