@@ -49,7 +49,7 @@ describe('hydra-node', function () {
             hydra = createClient(httpget);
 
             hydra.config(['https://hydraserver']);
-            assert.equal(calledUrl, 'https://hydraserver/app/hydra');
+            expect(calledUrl).to.equal('https://hydraserver/app/hydra');
         });
 
         it('should wait options.retryOnFail before retrying on fail', function () {
@@ -71,13 +71,13 @@ describe('hydra-node', function () {
                 };
             hydra = createClient(httpget);
             hydra.config(servers.slice());
-            assert.equal(calledUrls.length, 1);
+            expect(calledUrls.length).to.equal(1);
             flushTimeout();
-            assert.equal(calledUrls.length, 2);
+            expect(calledUrls.length).to.equal(2);
             flushTimeout();
-            assert.equal(calledUrls.length, 3);
+            expect(calledUrls.length).to.equal(3);
             servers.forEach(function (server, i) {
-                assert.equal(calledUrls[i], server + '/app/hydra');
+                expect(calledUrls[i]).to.equal(server + '/app/hydra');
             });
         });
 
@@ -96,9 +96,9 @@ describe('hydra-node', function () {
             for (i = 0; i < 4; i++) {
                 flushTimeout();
             }
-            assert.equal(calledUrls.length, 5);
+            expect(calledUrls.length).to.equal(5);
             calledUrls.forEach(function (calledUrl, i) {
-                assert.equal(calledUrl, servers[i % servers.length] + '/app/hydra');
+                expect(calledUrl).to.equal(servers[i % servers.length] + '/app/hydra');
             });
         });
 
@@ -116,9 +116,9 @@ describe('hydra-node', function () {
             flushTimeout();
             hydra.config(startingServers.slice());
             startingServers.push(startingServers.shift());
-            assert.deepEqual(hydra.config().servers, startingServers);
+            expect(hydra.config().servers).to.deep.equal(startingServers);
             flushTimeout();
-            assert.deepEqual(hydra.config().servers, responseServers);
+            expect(hydra.config().servers).to.deep.equal(responseServers);
         });
 
         it('should not mantain a reference to array list parameter to prevent external changes', function () {
@@ -126,7 +126,7 @@ describe('hydra-node', function () {
             hydra = createClient();
             hydra.config(servers);
             servers[0] = 'xx';
-            assert.notDeepEqual(hydra.config().servers, servers);
+            expect(hydra.config().servers).to.not.deep.equal(servers);
         });
 
         it('should throw an exception if no hydra servers are informed', function () {
