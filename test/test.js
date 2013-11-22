@@ -238,5 +238,15 @@ describe('hydra-node', function () {
             expect(response).to.deep.equal(list);
             expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp')
         })
+
+        it('should have nocache parameter as optional', function (){
+            var response, list=[1,2,3];
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            cb(null, ok, JSON.stringify(list));
+            expect(response).to.deep.equal(list);
+            expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp')
+        })
     });
 });

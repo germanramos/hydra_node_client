@@ -24,10 +24,10 @@ By default on the browser, the initial Hydra server will be the host serving the
 The node client have no initial servers, throwing an exception if <code>hydra.config</code> is not call prior to <code>hydra.get</code> 
 Calling <code>hydra.config</code> without parameters will return the current hydra servers list.
 
-## hydra.get(appID, nocache, callback)
+## hydra.get(appID, [nocache], callback)
 This function will call to callback(error, [servers]) function with the url of the server that provides the given appID.
 * appID - id of the application requested
-* nocache - boolean, if set to true will ask the hydra server for the application servers ignoring the internal cache.
+* nocache - boolean, if set to true will ask the hydra server for the application servers ignoring the internal cache, defaults to false.
 * callback(error, [servers]) - function callback that will receive the app server or an error in case the app does not exist
 
 Internally, it will ask to the first Hydra server or use the internal cache in order to get the corresponding server url for the app and then it will call to callback function. If the application exist, the servers are sent back and served through the callback function (if the application exist, but there are no servers available, it will return an empty array). If the application does not exist, the callback will receive an error and the list will be set to null.
