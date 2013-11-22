@@ -27,7 +27,7 @@ Calling <code>hydra.config</code> without parameters will return the current hyd
 ## hydra.get(appID, [nocache], callback)
 This function will call to callback(error, [servers]) function with the url of the server that provides the given appID.
 * appID - id of the application requested
-* nocache - boolean, if set to true will ask the hydra server for the application servers ignoring the internal cache, defaults to false.
+* nocache - boolean, optional, if set to true will ask the hydra server for the application servers ignoring the internal cache, defaults to false.
 * callback(error, [servers]) - function callback that will receive the app server or an error in case the app does not exist
 
 Internally, it will ask to the first Hydra server or use the internal cache in order to get the corresponding server url for the app and then it will call to callback function. If the application exist, the servers are sent back and served through the callback function (if the application exist, but there are no servers available, it will return an empty array). If the application does not exist, the callback will receive an error and the list will be set to null.
@@ -45,6 +45,9 @@ Jonas da Cruz &lt;unlogic@gmail.com&gt;
 Luis Mesas &lt;luismesas@gmail.com&gt;  
 Alejandro Penedo &lt;icedfiend@gmail.com&gt;  
 Jose María San José &lt;josem.sanjose@gmail.com&gt;
+
+Contributors:
+Gonzalo Ruiz de Villa &lt;gonzaloruizdevilla@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
