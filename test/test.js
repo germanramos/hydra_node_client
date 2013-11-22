@@ -237,7 +237,7 @@ describe('hydra-node', function () {
             cb(null, ok, JSON.stringify(list));
             expect(response).to.deep.equal(list);
             expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp')
-        })
+        });
 
         it('should have nocache parameter as optional', function (){
             var response, list=[1,2,3];
@@ -247,7 +247,7 @@ describe('hydra-node', function () {
             cb(null, ok, JSON.stringify(list));
             expect(response).to.deep.equal(list);
             expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp');
-        })
+        });
 
         it('should hit the cache after the first request', function (){
             var response, list=[1,2,3];
@@ -265,5 +265,25 @@ describe('hydra-node', function () {
             expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp');
             expect(calledUrls.length).to.equal(2);
         })
+
+        it('should ask server if nocache is true', function (){
+            var response, list=[1,2,3];
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            cb(null, ok, JSON.stringify(list));
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            hydra.get("somapp", true, function (err, list) {
+                response = list;
+            });
+            expect(response).to.deep.equal(list);
+            expect(calledUrls[2]).to.equal('https://hydraserver1/app/somapp');
+            expect(calledUrls.length).to.equal(3);
+        });
     });
 });
