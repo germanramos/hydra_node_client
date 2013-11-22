@@ -202,4 +202,14 @@ describe('hydra-node', function () {
         });
 
     });
+
+    describe('get(appID, nocache, callback)', function() {
+        it('should throw an error if not initialized', function (){
+            hydra = createClient();
+            function getCall(){
+                hydra.get("somapp",empty);
+            }
+            expect(getCall).to.throw('Hydra client not initialized. Use hydra.config([<server list>], {<options>});');
+        });
+    });
 });
