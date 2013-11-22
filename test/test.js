@@ -7,7 +7,7 @@ var assert = require('chai').assert,
     empty = function() {};
 
 
-var flushTimeout, flushInterval, lastTimeout, lastInterval;
+var flushTimeout, flushInterval, lastTimeout, lastInterval, now = Date.now();
 
 function createFlusher(f) {
     return function() {
@@ -27,6 +27,9 @@ function createClient(httpget, timers) {
                 flushInterval = createFlusher(f);
                 lastInterval = interval;
                 return 1;
+            },
+            now: function (){
+                return now;
             }
         },
         requires = {
