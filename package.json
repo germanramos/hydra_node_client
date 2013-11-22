@@ -11,6 +11,9 @@
     "url": "git://github.com/innotech/hydra_javascript_client.git"
   },
   "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
     "request": "~2.27.0"
   },
