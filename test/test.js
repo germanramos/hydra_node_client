@@ -204,6 +204,23 @@ describe('hydra-node', function () {
     });
 
     describe('get(appID, nocache, callback)', function() {
+        var cb, calledUrls, servers, ok = {statusCode: 200};
+        beforeEach(function (){
+            var httpget = function (url, _cb) {
+                calledUrls.push(url);
+                cb = _cb;
+            };
+            calledUrls = [];
+            hydra = createClient(httpget);
+            servers = ['https://hydraserver1', 'https://hydraserver2', 'https://hydraserver3'];
+            hydra.config(servers, {
+                hydraTimeOut: 1,
+                app: 1,
+                retryOnFail: 1
+            });
+            cb(null, {statusCode: 200}, JSON.stringify(servers));
+
+        })
         it('should throw an error if not initialized', function (){
             hydra = createClient();
             function getCall(){
@@ -211,5 +228,15 @@ describe('hydra-node', function () {
             }
             expect(getCall).to.throw('Hydra client not initialized. Use hydra.config([<server list>], {<options>});');
         });
+
+        it('should get the app from the first server in the list', function (){
+            var response, list=[1,2,3];
+            hydra.get("somapp", false, function (err, list) {
+                response = list;
+            });
+            cb(null, ok, JSON.stringify(list));
+            expect(response).to.deep.equal(list);
+            expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp')
+        })
     });
 });
