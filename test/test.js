@@ -7,7 +7,7 @@ var assert = require('chai').assert,
     empty = function() {};
 
 
-var flushTimeout, flushInterval, lastTimeout, lastInterval, now = Date.now();
+var flushTimeout, flushInterval, lastTimeout, lastInterval, now;
 
 function createFlusher(f) {
     return function() {
@@ -36,6 +36,7 @@ function createClient(httpget, timers) {
             'request': {get: httpget || default_httpget},
             './timers': timers || default_timers
         };
+    now = 0;
     lastTimeout = null;
     lastInterval = null;
     return SandboxedModule.require('../lib/hydra-node', {
@@ -222,7 +223,7 @@ describe('hydra-node', function () {
                 retryOnFail: 1
             });
             cb(null, {statusCode: 200}, JSON.stringify(servers));
-
+            now = 0;
         })
         it('should throw an error if not initialized', function (){
             hydra = createClient();
@@ -288,5 +289,29 @@ describe('hydra-node', function () {
             expect(calledUrls[2]).to.equal('https://hydraserver1/app/somapp');
             expect(calledUrls.length).to.equal(3);
         });
+
+        it('should ignore cache after timeout', function (){
+            var response,
+                list = [1,2,3],
+                list2 = [4,5,6];
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            cb(null, ok, JSON.stringify(list));
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            expect(calledUrls.length).to.equal(2);
+            now = hydra.config().timeouts.app * 2;
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            expect(calledUrls.length).to.equal(3);
+            cb(null, ok, JSON.stringify(list2));
+            expect(response).to.deep.equal(list2);
+        })
     });
 });
