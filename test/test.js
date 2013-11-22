@@ -312,6 +312,20 @@ describe('hydra-node', function () {
             expect(calledUrls.length).to.equal(3);
             cb(null, ok, JSON.stringify(list2));
             expect(response).to.deep.equal(list2);
+        });
+
+        it('should cycle hydra servers after timeouts', function (){
+            var response,
+                list = [1,2,3];
+            hydra.get("somapp", function (err, list) {
+                response = list;
+            });
+            cb(true, {statusCode: 408}, "Some error");
+            flushTimeout();
+            cb(null, ok, JSON.stringify(list));
+            expect(calledUrls.length).to.equal(3);
+            expect(calledUrls[2]).to.equal('https://hydraserver2/app/somapp');
+            expect(response).to.deep.equal(list);
         })
     });
 });
