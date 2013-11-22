@@ -224,7 +224,8 @@ describe('hydra-node', function () {
             });
             cb(null, {statusCode: 200}, JSON.stringify(servers));
             now = 0;
-        })
+        });
+
         it('should throw an error if not initialized', function (){
             hydra = createClient();
             function getCall(){
@@ -240,7 +241,7 @@ describe('hydra-node', function () {
             });
             cb(null, ok, JSON.stringify(list));
             expect(response).to.deep.equal(list);
-            expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp')
+            expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp');
         });
 
         it('should have nocache parameter as optional', function (){
@@ -268,7 +269,7 @@ describe('hydra-node', function () {
             expect(response).to.deep.equal(list);
             expect(calledUrls[1]).to.equal('https://hydraserver1/app/somapp');
             expect(calledUrls.length).to.equal(2);
-        })
+        });
 
         it('should ask server if nocache is true', function (){
             var response, list=[1,2,3];
@@ -326,6 +327,6 @@ describe('hydra-node', function () {
             expect(calledUrls.length).to.equal(3);
             expect(calledUrls[2]).to.equal('https://hydraserver2/app/somapp');
             expect(response).to.deep.equal(list);
-        })
+        });
     });
 });
