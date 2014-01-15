@@ -1,4 +1,4 @@
-# Hydra Javascript Client [![Build Status](https://api.travis-ci.org/gonzaloruizdevilla/hydra_javascript_client.png?branch=master)](http://travis-ci.org/gonzaloruizdevilla/hydra_javascript_client)
+# Hydra Node Client [![Build Status](https://api.travis-ci.org/gonzaloruizdevilla/hydra_javascript_client.png?branch=master)](http://travis-ci.org/gonzaloruizdevilla/hydra_javascript_client)
 Hydra client is a js file that should be included in a node project. 
 
 In a NodeJS project inside package.json:
