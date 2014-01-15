@@ -6,10 +6,6 @@ In a NodeJS project inside package.json:
 ```
 "hydra-node" : "*",
 ```
-In a website: 
-```
-<script type="text/javascript" src="http://innotech.github.io/hydra/client/hydra.js"></script>
-```
 
 It provides two functions:
 
